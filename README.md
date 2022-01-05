@@ -10,6 +10,7 @@ Specific features in mind to date:
 * Ensure font resizeability & try to make small details otherwise easier on the nearsighted (e.g. bigger dots on scatterplots?)
 * Sensible screen-reader output
 * Appropriate color palettes for the colorblind, and encouragement to use more than just color as a distinguishing factor
+* Mobile accessibility (resizing, alternate 'hover' option, etc)
 
 ## Accessibility needs to address
 
@@ -28,6 +29,8 @@ Specific features in mind to date:
 * WebAIM: https://webaim.org/
 * Web Accessibility Initiative: https://www.w3.org/WAI/
 * W3C Tutorials: https://www.w3.org/WAI/tutorials/
+* Principles of universal design: https://www.interaction-design.org/literature/article/learn-to-create-accessible-websites-with-the-principles-of-universal-design
+* Excellent posters: https://github.com/UKHomeOffice/posters/blob/master/accessibility/dos-donts/posters_en-UK/accessibility-posters-set.pdf
 
 Other Notes
 - Recent content (2020-2021) on 538 is a good example of accessible visualizations; previous content (esp. 3-4 years previous) is a good example of deeply inaccessible visualizations
