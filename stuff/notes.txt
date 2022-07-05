@@ -1,0 +1,10 @@
+June 23: 2-3 hours working on bar chart interspersed during the evening
+
+July 5: 9am - 
+working on color palettes
+To do: 
+- Center caption and title
+- Figure out how to resize axis tick text size
+- Figure out how to do alt text on an SVG
+- send palettes to colorblind people
+- (for fun) input all my sleep data to a sheet 
