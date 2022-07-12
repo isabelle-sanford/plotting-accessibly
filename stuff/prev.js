@@ -1,12 +1,12 @@
 // COLOR LIST
 const colors = {
-  bright: ["#47A", "#6ce", "#283", "#cb4", "#e67", "#a37", "#bbb"],
-  vibrant: ["#E73", "#07b", "#3be", "#e37", "#c31", "#098", "#bbb"],
-  muted: ["#328", "#173", "#4a9", "#8ce", "#dc7", "#c67", "#a49", "#825"],
+  bright: ["#47A", "#6ce", "#283", "#cb4", "#e67", "#a37", "#bbb"], //7
+  vibrant: ["#E73", "#07b", "#3be", "#e37", "#c31", "#098", "#bbb"],//7
+  muted: ["#328", "#173", "#4a9", "#8ce", "#dc7", "#c67", "#a49", "#825"],//8
   highContrast: ["#fff", "#da3", "#b56", "#048", "#000"], // ff is white, 00 is black
-  mediumContrast: ["#69C", "#048", "#EC6", "#945", "#970", "#E9A"],
-  dark: ["#225", "#255", "#252", "#663", "#633", "#555"],
-  pale: ["#BCE", "#CEF", "#CDA", "#EEB", "#FCC", "#DDD"],
+  mediumContrast: ["#69C", "#048", "#EC6", "#945", "#970", "#E9A"],//6
+  dark: ["#225", "#255", "#252", "#663", "#633", "#555"], //6
+  pale: ["#BCE", "#CEF", "#CDA", "#EEB", "#FCC", "#DDD"], //6
   light: [
     "#7AD",
     "#E86",
@@ -17,7 +17,7 @@ const colors = {
     "#BC3",
     "#AA0",
     "#DDD",
-  ],
+  ],//9
 };
 
 // // Define SVG area dimensions
@@ -34,7 +34,8 @@ const colors = {
 
 // data should be [{"label": "x", "value": y}]
 function makeGraph(data, divId, annotations) {
-  console.log(data);
+  //console.log(data);
+
 
   let div_w = d3
     .select("#" + divId)
@@ -48,20 +49,46 @@ function makeGraph(data, divId, annotations) {
     .split("px")
     .shift();
 
+    let svgWidth = div_w;
+
+  // caption setup
+  let capWidth = Math.round((svgWidth - 60) / 10); // 16px font seems ~10px wide on average
+  let capWrapped = `<tspan x="5"> ${annotations.caption[0]}`;
+  let curr = ""
+  let lines_ct = 0
+  for (let i = 1; i < annotations.caption.length; i++) {
+    currchar = annotations.caption.charAt(i);
+    curr += currchar;
+    if (currchar === " ") {
+      capWrapped += curr;
+      curr = "";
+    }
+    if (i % capWidth === 0) {
+      capWrapped += `</tspan><tspan dy=18 x="5">`; // 18 is px height but hmmmm
+      lines_ct++;
+    }
+
+  }
+  capWrapped += curr;
+  capWrapped += "</tspan>"
+
+
   // ? is using only width always okay?
-  let svgHeight = div_w * 0.8;
-  let svgWidth = div_w;
+  let svgHeight = div_w * 0.8 + 20 * lines_ct;
+
 
   let chartMargin = {
     top: 0.1 * svgHeight,
-    bottom: 0.2 * svgHeight,
+    bottom: Math.max(0.1 * svgHeight, 100) + 20 * lines_ct,
     right: 0.05 * svgWidth,
-    left: 0.1 * svgWidth,
+    left: Math.max(60, svgWidth * 0.1),
   };
 
   // Define dimensions of the chart area
   let chartWidth = svgWidth - chartMargin.left - chartMargin.right;
   let chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
+
+
 
   console.log(
     `SVG is ${svgHeight} by ${svgWidth}, chart is ${chartHeight} by ${chartWidth}`
@@ -78,7 +105,7 @@ function makeGraph(data, divId, annotations) {
     .attr("aria-labelledby", `title-${divId} `)
     .attr("aria-describedby", `desc-${divId}`)
     .attr("class", "PlotSVG")
-    .attr("color", "green");
+
   // .attr("aria-label", "title+desc"); // ?
 
   svg
@@ -105,7 +132,7 @@ function makeGraph(data, divId, annotations) {
   // Create a linear scale for the vertical axis.
   let yLinearScale = d3
     .scaleLinear()
-    .domain([0, d3.max(data, (d) => d.value)]) // ! customizable?
+    .domain([0, d3.max(data, (d) => d.value)]) // ! make customizable?
     .range([chartHeight, 0]);
 
   // Create two new functions passing our scales in as arguments
@@ -124,7 +151,7 @@ function makeGraph(data, divId, annotations) {
     .style("font-size", "14px");
 
   // COLOR
-  let colorChoice = colors["highContrast"]; // tbh default should probs be just like blue
+  let colorChoice = "blue"; //colors["highContrast"]; // tbh default should probs be just like blue
   if (annotations.colorScale in colors) {
     colorChoice = colors[annotations.colorScale];
   } else if (annotations.colorScale.length > 0) {
@@ -145,13 +172,14 @@ function makeGraph(data, divId, annotations) {
     .attr("height", (d) => chartHeight - yLinearScale(d.value))
     .attr("fill", (d, i) => colorChoice[i % colorChoice.length]);
 
-  //
+
+  // ADDING TEXT-------------------
 
   // y axis
   chartGroup
     .append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", -chartMargin.left / 2)
+    .attr("y", Math.min(-chartMargin.left / 2, -40)) // ACTUALLY X (bc rotate) // optionally add min distance
     .attr("x", -chartHeight / 2)
     //.attr("dy", "1em") // ??
     .attr("class", "axisText")
@@ -163,7 +191,7 @@ function makeGraph(data, divId, annotations) {
     .append("text")
     .attr(
       "transform",
-      `translate(${chartWidth / 2}, ${chartHeight + chartMargin.top})` // ??
+      `translate(${chartWidth / 2}, ${Math.max(chartHeight * 1.05, chartHeight + 40) })` // ??
     )
     .attr("class", "axisText")
     .text(annotations.xAxis)
@@ -182,11 +210,11 @@ function makeGraph(data, divId, annotations) {
     .append("text")
     .attr(
       "transform",
-      `translate(${chartWidth / 2}, ${svgHeight - chartMargin.bottom / 2})`
+      `translate(0, ${Math.max(chartHeight * 1.1, chartHeight + 70)})` // hmmm
     )
     .attr("class", "axisText") // ??? no?
-    .text(annotations.caption)
-    .style("text-anchor", "middle");
+    .html(capWrapped)
+    //.style("text-anchor", "middle");
 }
 
 const wakeTimeData = [
@@ -221,7 +249,7 @@ const wakeAnnotations = {
   yAxis: "Number of Occurrences",
   caption:
     "Created from a near-complete record of my sleep from June 2021 to June 2022. When Mr. Bilbo Baggins of Bag End announced that he would be celebrating his eleventy-first birthday with a party of special magnificence, there was much talk and excitement in Hobbiton.",
-  colorScale: "vibrant",
+  colorScale: ["blue"], // need to document that it must be a list
 };
 
 const sleepDurationData = [
@@ -254,7 +282,29 @@ const durationAnnotations = {
   yAxis: "Number of Occurrences",
   caption:
     "Created from a near-complete record of my sleep from June 2021 to June 2022.",
-  colorScale: "bright",
+  colorScale:   [
+    "#7AD", // 1
+    "#E86", // 2
+    "#ED8", // 3
+    "#FAB", // 4
+    "#9DF", // 5
+    "#4B9", // 6
+    "#BC3", // 7
+    "#AA0", // 8
+    "#DDD", // 9
+    "#FAB",
+    "#BC3",
+    "#DDD",
+    "#BC3",
+    "#4B9",
+    "#DDD",
+    "#ED8",
+    "#BC3",
+    "#E86",
+    "#AA0",
+    "#7AD",
+    "#9DF",
+  ]
 };
 const sleepStartData = [
   { label: 12, value: 3 },
@@ -287,7 +337,7 @@ const sleepAnnotations = {
   xAxis: "Hour of the day",
   yAxis: "Number of Occurrences",
   caption:
-    "Created from a near-complete record of my sleep from June 2021 to June 2022.",
+    "Created from a near-complete record of my sleep from June 2021 to June 2022. What I was on previously am I the reason interesting stuff we'll see what happens in agent select but now it's time to go ahead and meet our teams",
   colorScale: "muted",
 };
 

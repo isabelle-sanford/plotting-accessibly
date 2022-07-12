@@ -9,10 +9,30 @@ X Figure out how to resize axis tick text size
 - send palettes to colorblind people
 
 
-July 11: 4:30pm - 
+July 11: 4:30pm - 9:30pm
 To do:
 - test title/desc with screen reader
 - axis text size - put into style not directly spec font? 
-- resizing: text size / overlap problems
-- set way for ppl to control ratio? Currently 8:10 (wider than tall)
-- WRAP TEXT
+X resizing: text size / overlap problems
+//- set way for ppl to control ratio? Currently 8:10 (wider than tall)
+X WRAP TEXT
+
+
+July 12: 8:30am - 
+- try a manually sized div
+- vertical text for x axis? 
+
+16px text ("normal") seems to be about 10px wide
+
+
+
+STUFF
+
+
+- color (DONE)
+- alt text (done?)
+- keyboard input (not started)
+- resizing (in progress) 
+    - also wrap text
+
+then: start on poster, documentation
