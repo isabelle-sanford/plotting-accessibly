@@ -1,10 +1,18 @@
 June 23: 2-3 hours working on bar chart interspersed during the evening
 
-July 5: 9am - 
+July 5: 9am - 12:30
 working on color palettes
 To do: 
-- Center caption and title
-- Figure out how to resize axis tick text size
+X Center caption and title
+X Figure out how to resize axis tick text size 
 - Figure out how to do alt text on an SVG
 - send palettes to colorblind people
-- (for fun) input all my sleep data to a sheet 
+
+
+July 11: 4:30pm - 
+To do:
+- test title/desc with screen reader
+- axis text size - put into style not directly spec font? 
+- resizing: text size / overlap problems
+- set way for ppl to control ratio? Currently 8:10 (wider than tall)
+- WRAP TEXT
